@@ -31,7 +31,7 @@
 
 // LED Strip
 #define PIN 6 // This is your SPI out to your NeoPixel strip
-const int maxled=15; // How many LEDs are on the NeoPixel string, or RGB leds you are working with
+const int maxled=3; // How many LEDs are on the NeoPixel string, or RGB leds you are working with
 const int blendCount=10;
 
 // For prepping maximum blended values; I'm using a 3 dimensional array (Below)
@@ -41,7 +41,7 @@ const int blendCount=10;
 int lightVals[maxled][blendCount][3];
 
 float runner=0;
-float mmRGB=200;
+float mmRGB=100;
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(maxled, PIN, NEO_GRB + NEO_KHZ800);  //NeoPixel prep
 
@@ -104,7 +104,7 @@ void ledFader(uint8_t wait) {
   int mmRGB=255; // 255 is the max brightness an LED can be, but you can set it anywhere between 0-255
   
   // To use the test fade mode, leave alwaysOn=0
-  int alwaysOn=0;
+  int alwaysOn=1;
   int colorFor=50; // How long it will be adding colors into the blend
   int fadeOutFor=150; // How long it will be adding 0's into the colors; to show the color fade out
   

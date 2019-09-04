@@ -60,13 +60,13 @@
 // The first array is the number of lights
 // The second array is the maximum levels of blending
 // The third array is R, G, B respectively
-#define I_BLEND_COUNT 10
-#define BLEND_COUNT 10.0
+#define I_BLEND_COUNT 20
+#define BLEND_COUNT 20.0
 int lightVals[LED_COUNT][I_BLEND_COUNT][3];
 
 int irunner=0;
 float runner=0;
-float mmRGB=200; // 255 is the max brightness an LED can be, but you can set it anywhere between 0-255
+float mmRGB=255; // 255 is the max brightness an LED can be, but you can set it anywhere between 0-255
 
 // Strip 1 --
 Adafruit_NeoPixel strip1(LED_COUNT, LED_PIN_1, NEO_GRB + NEO_KHZ800);
@@ -163,14 +163,14 @@ void ledFader(uint8_t wait) {
   
   // To use the test fade mode, leave alwaysOn=0
   int alwaysOn=0;
-  int colorFor=50; // How long it will be adding colors into the blend
-  int fadeOutFor=150; // How long it will be adding 0's into the colors; to show the color fade out
-  
+  int colorFor=10; // How long it will be adding colors into the blend
+  int fadeOutFor=50; // How long it will be adding 0's into the colors; to show the color fade out
+  float tau=3.14159265358979*2.0;
   for(i=0;i< strip1.numPixels(); i++) {
     if( int(floor(runner))%(colorFor+fadeOutFor) < colorFor || alwaysOn ){
-      fadeR= max(0,min(mmRGB, (sin(i/(TAU)+sin(runner/35.515)*3.1415+sin(-runner/330.5)*30+sin(-runner/170.9)*25))*1.25*mmRGB ));
-      fadeG= max(0,min(mmRGB, (cos(i/(TAU)-sin(-runner/25.58)*3.1415+sin(-runner/250.8)*30-cos(runner/102.2)*20))*1.25*mmRGB ));
-      fadeB= max(0,min(mmRGB, (sin(i/(TAU)-cos(runner/50.45)*3.1415+sin(runner/300.1)*30-cos(-runner/158.3)*30))*1.25*mmRGB ));
+      fadeR= max(0,min(mmRGB, (sin(i/(tau)+sin(runner/35.515)*3.1415+sin(-runner/330.5)*30+sin(-runner/170.9)*25))*1.25*mmRGB ));
+      fadeG= max(0,min(mmRGB, (cos(i/(tau)-sin(-runner/25.58)*3.1415+sin(-runner/250.8)*30-cos(runner/102.2)*20))*1.25*mmRGB ));
+      fadeB= max(0,min(mmRGB, (sin(i/(tau)-cos(runner/50.45)*3.1415+sin(runner/300.1)*30-cos(-runner/158.3)*30))*1.25*mmRGB ));
     }else{
       fadeR=0;
       fadeG=0;
@@ -196,7 +196,7 @@ void smoothRGB(int i, byte *fadeR, byte *fadeG, byte *fadeB){
   float dispVal, curvVal;
   int x,c,divCount;
   int runAdd=1;
-  int blender=I_BLEND_COUNT-1;
+  int blender=10-1;
   runAdd=(blender-1);
   int prevRunAdd=runAdd;
   for(c=0; c<3; c++){
@@ -209,7 +209,7 @@ void smoothRGB(int i, byte *fadeR, byte *fadeG, byte *fadeB){
       curvVal=max(0,min(mmRGB, (*fadeB) ));
     }
     runAdd+=I_BLEND_COUNT;
-    curvVal=(curvVal+lightVals[i][blender][c]*BLEND_COUNT)/(BLEND_COUNT+1);
+    curvVal=(curvVal+lightVals[i][blender][c]*10.0)/(10.0+1.0);
     dispVal+=curvVal*runAdd;
     divCount=runAdd;
     lightVals[i][blender][c]=curvVal;
@@ -217,7 +217,7 @@ void smoothRGB(int i, byte *fadeR, byte *fadeG, byte *fadeB){
       runAdd=(x+1);
       divCount+=runAdd;
       curvVal=lightVals[min(blender-1,i+1)][x][c];
-      curvVal=(curvVal+lightVals[i][x][c]*(BLEND_COUNT-1))/BLEND_COUNT;
+      curvVal=(curvVal+lightVals[i][x][c]*(10.0-1.0))/10.0;
       dispVal+=curvVal*runAdd;
       lightVals[i][x][c]=curvVal;
     }
